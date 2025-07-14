@@ -1,9 +1,13 @@
 import { createAction, props } from '@ngrx/store';
-import { PokemonListResponse, Pokemon } from 'src/app/types/pokemon';
+import {
+  PokemonListResponse,
+  Pokemon,
+  PokemonListParams,
+} from 'src/app/types/pokemon';
 
 export const loadPokemons = createAction(
   '[Pokemon] Load Pokemons',
-  props<{ params: PokemonListResponse }>()
+  props<{ params: PokemonListParams }>()
 );
 
 export const loadPokemonsSuccess = createAction(
@@ -53,4 +57,8 @@ export const importCsvSuccess = createAction('[Pokemon] Import CSV Success');
 export const importCsvFailure = createAction(
   '[Pokemon] Import CSV Failure',
   props<{ error: string }>()
+);
+
+export const clearSelectedPokemon = createAction(
+  '[Pokemon] Clear Selected Pokemon'
 );

@@ -42,20 +42,24 @@ export class PokemonService {
   }
 
   getPokemon(id: number): Observable<Pokemon> {
-    return this.http.get<Pokemon>(this.env.server + id);
+    return this.http.get<Pokemon>(this.env.server + '/pokemon/' + id);
   }
 
   importPokemonCsv(file: File): Observable<any> {
+    console.log('Importing CSV file:', file.name);
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(this.env.server + '/import', formData);
+    return this.http.post(this.env.server + '/pokemon/import/', formData);
   }
 
   toggleFavorite(pokemonId: number): Observable<any> {
-    return this.http.post(this.env.server + `/${pokemonId}/favorite`, {});
+    return this.http.post(
+      this.env.server + `/pokemon/${pokemonId}/favorite`,
+      {}
+    );
   }
 
   getFavorites(): Observable<Pokemon[]> {
-    return this.http.get<Pokemon[]>(this.env.server + '/favorites');
+    return this.http.get<Pokemon[]>(this.env.server + '/pokemon/favorites');
   }
 }

@@ -24,16 +24,6 @@ export interface PokemonListResponse {
   limit: number;
 }
 
-export interface PokemonFilters {
-  name?: string;
-  type?: string;
-  legendary?: boolean;
-  speedMin?: number;
-  speedMax?: number;
-  page?: number;
-  limit?: number;
-}
-
 export interface PokemonListParams {
   page: number;
   limit: number;

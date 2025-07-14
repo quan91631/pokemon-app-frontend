@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { PokemonState, initialPokemonState } from './pokemon.state';
+import { initialPokemonState } from './pokemon.state';
 import * as PokemonActions from './pokemon.actions';
 
 export const pokemonReducer = createReducer(
@@ -56,5 +56,9 @@ export const pokemonReducer = createReducer(
     ...state,
     loading: false,
     error: null,
+  })),
+  on(PokemonActions.clearSelectedPokemon, (state) => ({
+    ...state,
+    selectedPokemon: null,
   }))
 );

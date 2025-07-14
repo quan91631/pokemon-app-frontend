@@ -16,6 +16,7 @@ import { Pokemon } from 'src/app/types/pokemon';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 import { LoadingSpinnerComponent } from '../spinner/spinner.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     CommonModule,
     PokemonCardComponent,
     LoadingSpinnerComponent,
-    // PokemonDetailModalComponent
+    RouterLink,
   ],
 })
 export class HomeComponent implements OnInit {

@@ -2,7 +2,6 @@
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-6">Pokémon Collection</h1>
 
-    <!-- Import CSV Button -->
     <div class="mb-6">
       <input
         type="file"
@@ -19,10 +18,8 @@
       </button>
     </div>
 
-    <!-- Search and Filters -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
       <form [formGroup]="searchForm">
-        <!-- Basic Search -->
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-2"
             >Search Pokémon</label
@@ -35,7 +32,6 @@
           />
         </div>
 
-        <!-- Advanced Filters -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -110,7 +106,6 @@
       </form>
     </div>
 
-    <!-- Results Info and Pagination Controls -->
     <div class="flex justify-between items-center mb-6">
       <div *ngIf="pagination$ | async as pagination" class="text-gray-600">
         Showing {{ (pagination.page - 1) * pagination.limit + 1 }} to
@@ -134,13 +129,10 @@
     </div>
   </div>
 
-  <!-- Error Message -->
   <app-error-message [message]="error$ | async"></app-error-message>
 
-  <!-- Loading Spinner -->
   <app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
 
-  <!-- Pokemon Grid -->
   <div
     *ngIf="!(loading$ | async)"
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8"
@@ -153,8 +145,7 @@
     >
     </app-pokemon-card>
   </div>
-
-  <!-- Pagination -->
+  
   <div *ngIf="pagination$ | async as pagination" class="flex justify-center">
     <nav class="flex space-x-2">
       <button

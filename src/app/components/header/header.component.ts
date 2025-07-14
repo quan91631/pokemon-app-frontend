@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/store/auth/auth.selector';
 import { logout } from 'src/app/store/auth/auth.actions';
 
-
 @Component({
   selector: 'app-header',
   templateUrl: 'header.component.html',
@@ -15,7 +14,11 @@ import { logout } from 'src/app/store/auth/auth.actions';
 export class HeaderComponent {
   user$ = this.store.select(selectUser);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    this.user$.subscribe((user) => {
+      console.log('User data:', user);
+    });
+  }
 
   onLogout(): void {
     this.store.dispatch(logout());

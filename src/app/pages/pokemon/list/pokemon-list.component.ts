@@ -121,9 +121,8 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   }
 
   private setupSearchDebounce(): void {
-    this.searchForm
-      .get('search')
-      ?.valueChanges.pipe(
+    this.searchForm.valueChanges
+      .pipe(
         debounceTime(300),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
@@ -135,7 +134,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
 
   private loadPokemons(): void {
     const params = this.buildSearchParams();
-    // this.store.dispatch(loadPokemons({ params }));
+    this.store.dispatch(loadPokemons({ params }));
   }
 
   private buildSearchParams(): PokemonListParams {
