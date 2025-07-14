@@ -1,0 +1,81 @@
+<div
+  class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden group"
+>
+  <!-- Pokemon Image -->
+  <div
+    class="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center"
+  >
+    <img
+      [src]="getPokemonImage()"
+      [alt]="pokemon.name"
+      (error)="onImageError($event)"
+      class="max-w-[80%] max-h-[80%] object-contain transition-transform duration-300 group-hover:scale-110"
+      (click)="onCardClick()"
+    />
+
+    <!-- Favorite Button -->
+    <button
+      (click)="onFavoriteClick($event)"
+      class="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+    >
+      <svg
+        class="w-5 h-5 transition-colors"
+        [class.text-red-500]="pokemon.isFavorite"
+        [class.text-gray-400]="!pokemon.isFavorite"
+        [class.fill-current]="pokemon.isFavorite"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Pokemon Info -->
+  <div class="p-4" (click)="onCardClick()">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2 capitalize">
+      {{ pokemon.name }}
+    </h3>
+
+    <!-- Types -->
+    <div class="flex flex-wrap gap-1 mb-3">
+      <span
+        class="px-2 py-1 text-xs rounded-full text-white font-medium"
+        [style.background-color]="getTypeColor(pokemon.type1)"
+      >
+        {{ pokemon.type1 }}
+      </span>
+      <span
+        *ngIf="pokemon.type2"
+        class="px-2 py-1 text-xs rounded-full text-white font-medium"
+        [style.background-color]="getTypeColor(pokemon.type2)"
+      >
+        {{ pokemon.type2 }}
+      </span>
+      <span
+        *ngIf="pokemon.legendary"
+        class="px-2 py-1 text-xs rounded-full bg-yellow-400 text-yellow-900 font-medium"
+      >
+        Legendary
+      </span>
+    </div>
+
+    <!-- Stats -->
+    <div class="text-sm text-gray-600">
+      <div class="flex justify-between items-center">
+        <span>Speed:</span>
+        <span class="font-semibold">{{ pokemon.speed }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span>Total:</span>
+        <span class="font-semibold">{{ pokemon.total }}</span>
+      </div>
+    </div>
+  </div>
+</div>
