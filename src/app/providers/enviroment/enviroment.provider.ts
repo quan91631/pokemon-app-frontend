@@ -10,7 +10,7 @@ export const ENVIRONMENT = new InjectionToken<Environment>('ENVIRONMENT');
 
 export const DEV_ENV: Environment = {
   domain: 'http://localhost:4200',
-  server: 'http://localhost:3000',
+  server: 'http://localhost:3000/api',
   env: 'development',
 };
 

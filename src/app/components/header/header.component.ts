@@ -1,38 +1,23 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { User } from 'src/app/types/auth';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectUser } from 'src/app/store/auth/auth.selector';
+import { logout } from 'src/app/store/auth/auth.actions';
+
 
 @Component({
   selector: 'app-header',
   templateUrl: 'header.component.html',
   standalone: true,
-  imports: [NgIf, AsyncPipe],
+  imports: [CommonModule, RouterModule],
 })
-export class HeaderComponent implements OnInit {
-  currentUser$: Observable<User | null>;
-  showUserMenu = false;
-  showMobileMenu = false;
+export class HeaderComponent {
+  user$ = this.store.select(selectUser);
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.currentUser$ = this.authService.currentUser$;
-  }
+  constructor(private store: Store) {}
 
-  ngOnInit(): void {}
-
-  toggleUserMenu(): void {
-    this.showUserMenu = !this.showUserMenu;
-  }
-
-  toggleMobileMenu(): void {
-    this.showMobileMenu = !this.showMobileMenu;
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.showUserMenu = false;
-    this.router.navigate(['/login']);
+  onLogout(): void {
+    this.store.dispatch(logout());
   }
 }

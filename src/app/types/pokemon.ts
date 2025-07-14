@@ -14,6 +14,7 @@ export interface Pokemon {
   legendary: boolean;
   image?: string;
   isFavorite?: boolean;
+  ytbUrl: string;
 }
 
 export interface PokemonListResponse {
@@ -31,4 +32,14 @@ export interface PokemonFilters {
   speedMax?: number;
   page?: number;
   limit?: number;
+}
+
+export interface PokemonListParams {
+  page: number;
+  limit: number;
+  search?: string;
+  type?: string;
+  legendary?: boolean;
+  speedMin?: number;
+  speedMax?: number;
 }

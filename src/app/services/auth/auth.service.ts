@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Inject, inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
@@ -18,64 +18,51 @@ export class AuthService {
   private tokenSubject = new BehaviorSubject<string | null>(null);
 
   public currentUser$ = this.currentUserSubject.asObservable();
-  public token$ = this.tokenSubject.asObservable();
 
-  env = inject(ENVIRONMENT);
   http = inject(HttpClient);
-
-  constructor() {
-    this.initializeAuth();
-  }
-
-  private initializeAuth(): void {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-
-    if (token && user) {
-      this.tokenSubject.next(token);
-      this.currentUserSubject.next(JSON.parse(user));
-    }
-  }
+  env = inject(ENVIRONMENT);
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
+    console.log(credentials)
     return this.http
       .post<AuthResponse>(this.env.server + '/auth/login', credentials)
       .pipe(
         tap((response) => {
-          this.setAuthData(response);
+          this.setToken(response.access_token);
+          this.tokenSubject.next(response.access_token);
         })
       );
   }
 
   signup(userData: SignupRequest): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(this.env.server + '/auth/signup', userData)
+      .post<AuthResponse>(this.env.server + '/auth/register', userData)
       .pipe(
         tap((response) => {
-          this.setAuthData(response);
+          this.setToken(response.access_token);
+          this.tokenSubject.next(response.access_token);
         })
       );
   }
 
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     this.tokenSubject.next(null);
-    this.currentUserSubject.next(null);
   }
 
-  private setAuthData(response: AuthResponse): void {
-    localStorage.setItem('token', response.access_token);
-    localStorage.setItem('user', JSON.stringify(response.user));
-    this.tokenSubject.next(response.access_token);
-    this.currentUserSubject.next(response.user);
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
-  get isAuthenticated(): boolean {
-    return !!this.tokenSubject.value;
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 
-  get currentUser(): User | null {
-    return this.currentUserSubject.value;
+  private setToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  get token$(): Observable<string | null> {
+    return this.tokenSubject.asObservable();
   }
 }

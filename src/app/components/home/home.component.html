@@ -1,0 +1,73 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Hero Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to PokéApp</h1>
+    <p class="text-xl text-gray-600">
+      Discover and collect your favorite Pokémon
+    </p>
+  </div>
+
+  <!-- Video Carousel Section -->
+  <div class="mb-12">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured Videos</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        *ngFor="let video of featuredVideos"
+        class="bg-white rounded-lg shadow-md overflow-hidden"
+      >
+        <div class="aspect-w-16 aspect-h-9">
+          <iframe
+            [src]="video.embedUrl"
+            [title]="video.title"
+            class="w-full h-48"
+            frameborder="0"
+            allowfullscreen
+          >
+          </iframe>
+        </div>
+        <div class="p-4">
+          <h3 class="font-semibold text-gray-900">{{ video.title }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Pokémon Section -->
+  <div class="mb-12">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured Pokémon</h2>
+
+    <app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
+
+    <div
+      *ngIf="!(loading$ | async)"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
+    >
+      <app-pokemon-card
+        *ngFor="let pokemon of homePokemons$ | async"
+        [pokemon]="pokemon"
+        (cardClick)="onPokemonClick($event)"
+        (favoriteClick)="onFavoriteClick($event)"
+      >
+      </app-pokemon-card>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="text-center bg-blue-50 rounded-lg p-8">
+    <h3 class="text-2xl font-bold text-gray-900 mb-4">
+      Ready to explore more?
+    </h3>
+    <p class="text-gray-600 mb-6">
+      Browse our complete Pokémon collection and build your favorites list!
+    </p>
+    <a
+      routerLink="/pokemon"
+      class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+    >
+      View All Pokémon
+    </a>
+  </div>
+</div>
+
+<!-- Pokemon Detail Modal -->
+<!-- <app-pokemon-detail-modal></app-pokemon-detail-modal> -->

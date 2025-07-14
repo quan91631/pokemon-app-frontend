@@ -1,0 +1,192 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Pokémon Collection</h1>
+
+    <!-- Import CSV Button -->
+    <div class="mb-6">
+      <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept=".csv"
+        class="hidden"
+      />
+      <button
+        (click)="fileInput.click()"
+        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+      >
+        Import CSV
+      </button>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <form [formGroup]="searchForm">
+        <!-- Basic Search -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Search Pokémon</label
+          >
+          <input
+            type="text"
+            formControlName="search"
+            placeholder="Enter Pokémon name..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Advanced Filters -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Type</label
+            >
+            <select
+              formControlName="type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Types</option>
+              <option *ngFor="let type of pokemonTypes" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Legendary</label
+            >
+            <select
+              formControlName="legendary"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All</option>
+              <option value="true">Legendary</option>
+              <option value="false">Non-Legendary</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Min Speed</label
+            >
+            <input
+              type="number"
+              formControlName="speedMin"
+              placeholder="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Max Speed</label
+            >
+            <input
+              type="number"
+              formControlName="speedMax"
+              placeholder="200"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <div class="mt-4 flex space-x-4">
+          <button
+            type="button"
+            (click)="onSearch()"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            (click)="onClearFilters()"
+            class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Info and Pagination Controls -->
+    <div class="flex justify-between items-center mb-6">
+      <div *ngIf="pagination$ | async as pagination" class="text-gray-600">
+        Showing {{ (pagination.page - 1) * pagination.limit + 1 }} to
+        {{ Math.min(pagination.page * pagination.limit, pagination.total) }} of
+        {{ pagination.total }} results
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="text-sm text-gray-700">Items per page:</label>
+        <select
+          [value]="currentLimit"
+          (change)="onLimitChange($event)"
+          class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <app-error-message [message]="error$ | async"></app-error-message>
+
+  <!-- Loading Spinner -->
+  <app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
+
+  <!-- Pokemon Grid -->
+  <div
+    *ngIf="!(loading$ | async)"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8"
+  >
+    <app-pokemon-card
+      *ngFor="let pokemon of pokemons$ | async"
+      [pokemon]="pokemon"
+      (cardClick)="onPokemonClick($event)"
+      (favoriteClick)="onFavoriteClick($event)"
+    >
+    </app-pokemon-card>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="pagination$ | async as pagination" class="flex justify-center">
+    <nav class="flex space-x-2">
+      <button
+        [disabled]="pagination.page === 1"
+        (click)="onPageChange(pagination.page - 1)"
+        class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Previous
+      </button>
+
+      <button
+        *ngFor="let page of getPageNumbers(pagination)"
+        [class.bg-blue-600]="page === pagination.page"
+        [class.text-white]="page === pagination.page"
+        [class.bg-gray-200]="page !== pagination.page"
+        [class.text-gray-700]="page !== pagination.page"
+        (click)="onPageChange(page)"
+        class="px-3 py-2 rounded-md hover:bg-blue-500 hover:text-white"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        [disabled]="pagination.page * pagination.limit >= pagination.total"
+        (click)="onPageChange(pagination.page + 1)"
+        class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- Pokemon Detail Modal -->
+<!-- <app-pokemon-detail-modal></app-pokemon-detail-modal> -->
