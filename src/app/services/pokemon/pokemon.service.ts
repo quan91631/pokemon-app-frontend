@@ -46,7 +46,6 @@ export class PokemonService {
   }
 
   importPokemonCsv(file: File): Observable<any> {
-    console.log('Importing CSV file:', file.name);
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post(this.env.server + '/pokemon/import/', formData);

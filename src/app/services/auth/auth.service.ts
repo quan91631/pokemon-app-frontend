@@ -23,7 +23,6 @@ export class AuthService {
   env = inject(ENVIRONMENT);
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    console.log(credentials)
     return this.http
       .post<AuthResponse>(this.env.server + '/auth/login', credentials)
       .pipe(

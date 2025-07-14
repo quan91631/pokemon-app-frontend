@@ -14,11 +14,7 @@ import { logout } from 'src/app/store/auth/auth.actions';
 export class HeaderComponent {
   user$ = this.store.select(selectUser);
 
-  constructor(private store: Store) {
-    this.user$.subscribe((user) => {
-      console.log('User data:', user);
-    });
-  }
+  constructor(private store: Store) {}
 
   onLogout(): void {
     this.store.dispatch(logout());
